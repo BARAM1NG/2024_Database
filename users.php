@@ -17,6 +17,21 @@ if ($conn->connect_error) {
 $query = "SELECT Username, Email, CreateDate FROM P_Users WHERE ID = '$user_id'";
 $result = $conn->query($query);
 
+// 사용자 정보 수정하기
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $new_username = $_POST['new_username'];
+    $new_email = $_POST['new_email'];
+
+    // 사용자 정보 업데이트 쿼리 실행
+    $update_query = "UPDATE P_Users SET Username = '$new_username', Email = '$new_email' WHERE ID = '$user_id'";
+    if ($conn->query($update_query) === TRUE) {
+        echo "<script>alert('사용자 정보가 성공적으로 업데이트되었습니다.');</script>";
+        // 페이지 새로고침하여 최신 정보를 표시
+        echo "<meta http-equiv='refresh' content='0'>";
+    } else {
+        echo "Error updating record: " . $conn->error;
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -55,6 +70,23 @@ $result = $conn->query($query);
         tr:hover {
             background-color: #f2f2f2;
         }
+        form {
+            margin-top: 20px;
+        }
+        input[type=text], input[type=email] {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0;
+            box-sizing: border-box;
+        }
+        input[type=submit] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
@@ -83,6 +115,16 @@ $result = $conn->query($query);
             ?>
         </tbody>
     </table>
+    
+    <!-- 사용자 정보 수정 폼 -->
+    <h2>사용자 정보 수정</h2>
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+        <label for="new_username">새로운 이름:</label>
+        <input type="text" id="new_username" name="new_username" required>
+        <label for="new_email">새로운 이메일:</label>
+        <input type="email" id="new_email" name="new_email" required>
+        <input type="submit" value="저장">
+    </form>
 </body>
 </html>
 
