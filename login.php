@@ -1,5 +1,4 @@
 <?php
-
 // 데이터베이스 연결
 $conn = mysqli_connect("localhost", "hmpark", "2023103938", "hmpark");
 
